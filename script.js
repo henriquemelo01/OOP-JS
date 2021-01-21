@@ -251,28 +251,69 @@ car2.break();
 const PersonCl = class {};
 // class declaration
 class Person {
-  constructor(firstName, birthYear) {
-    this.firstName = firstName;
+  constructor(fullName, birthYear) {
+    // this.fullName = fullName;
     this.birthYear = birthYear;
+    this.fullName = fullName;
   }
 
-  //   Definindo Metodos do Prototype - Ex Person.prototype.calcAge()
-  calcAge() {
+  //   Definindo Metodos do Prototype - Ex Person.prototype.get Age()
+  get Age() {
     const now = new Date();
     console.log(now.getFullYear() - this.birthYear);
+    return now.getFullYear() - this.birthYear;
   }
 
   greet() {
-    console.log(`Hello, ${this.firstName}!!`);
+    console.log(`Hello, ${this._fullName}!!`);
+  }
+
+  // Como o setter foi declarado com o mesmo nome de uma propriedade do construtor, toda vez que a mesma for declarada também será chamado o setter. Entretanto, deverá ser criado uma nova propriedade para armazenar o resultado do setter para não haver conflito com a propriedade declarada no constructor.
+
+  //  Validation EX: Setter tem a função de validar se o objeto foi declarado com o nome completo
+
+  set fullName(name) {
+    console.log(name); // fullName -> parâmetro do constructor
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+
+  // Quando usamos obj.fullName, será chamada a função que cria a propriedade fullName
+  get fullName() {
+    return this._fullName;
   }
 }
 
-const flavia = new Person('Flávia', 1968);
-console.log(flavia);
-flavia.calcAge();
+const flavia = new Person('Flávia Moraes', 1968);
+flavia.Age; // call get Age()
 flavia.greet();
 console.log(flavia.__proto__ === Person.prototype);
+console.log(flavia);
+
+const eduardo = new Person('Eduardo Stehling', 1966);
 
 // 1. Classes are not hoisted: Não podemos utiliza-las antes de declararmos
 // 2. Class are first-class citizes: Podemos passa-las como parâmetros de funções ou retorna-las em funções
 // 3. Classes are executed in strict mode
+
+// Get / Set Methods +
+
+// Exemplo 1
+const account = {
+  owner: 'jonas',
+  movements: [200, 530, 120, 300],
+
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest); // call get latest()
+account.latest = 200; // call set latest()
+console.log(account.movements);
+
+// Exemplo 2 : Modificando o objeto Person - Validation
