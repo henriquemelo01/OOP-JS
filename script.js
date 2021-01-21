@@ -160,3 +160,87 @@ console.log(ana);
 
 // Prototype Chain: http://prntscr.com/xdkfzv
 // EX: henrique.__proto__ : Aluno.prototype -> Como Aluno.prototype é um objeto simples, este foi criado pelo construtor Object(), assim Aluno.prototype.__proto__ : Object.prototype -> Object.prototype__proto__ : null. Quando chamamos um metodo o JS vai procura-lo seguindo a ordem dos prototypes (Primeiro procura no objeto henrique, se não encontrou, procura no seu prototype Aluno.prototype, se não encontrou procura no Object.prototype, se não encontrou = error)
+
+console.log(henrique.__proto__.__proto__); // Object.prototype - TOP OF PROTOTYPE CHAIN
+console.log(henrique.__proto__.__proto__.__proto__);
+
+// Prototype dos Arrays
+const arr = [1, 2, 3, 5, 3, 4, 5]; // = new Array()
+console.log(arr.__proto__); // Array.prototype
+console.log(arr.__proto__.__proto__); // Object.prototype
+console.log(arr.__proto__.__proto__.__proto__); // null
+
+// Add novas funcionalidades a todos os arrays aplicando o conceito do prototype inheritance. Todo Array criado pode acessar propriedades e metodos do seu prototype. Assim, definindo um novo metodo no Array.prototype, vamos fazer com que todos os arrays sejam capaz de acessar o metodo, apesar de não possuirem. - Nunca faça isso ***
+
+Array.prototype.unique = function () {
+  return [...new Set(this)]; // this é o array que chama o metodo
+};
+console.log(arr.unique());
+
+const h1 = document.querySelector('h1');
+console.dir(h1); // proto chain -> Corresponde aos parents
+console.dir(x => x++); // funções também são Objetos, assim estão linkados a um prototype Function.prototype, por isso as funções também possuem metodos.
+
+// ================= Coding Challenge #1 =================
+
+/* Your Tasks
+
+1. Use a constructor function to implement a 'Car'. A car has a 'make' and a
+'speed' property. The 'speed' property is the current speed of the car in
+km/h
+2. Implement an 'accelerate' method that will increase the car's speed by 10,
+and log the new speed to the console
+3. Implement a 'brake' method that will decrease the car's speed by 5, and log
+the new speed to the console
+4. Create 2 'Car' objects and experiment with calling 'accelerate' and
+'brake' multiple times on each of them
+
+*/
+
+// Construtor
+const Car = function (marca, modelo, speed) {
+  // Speed propertie corresponde a velocidade atual do carro
+
+  // Properies representam o estado de um objeto
+  this.marca = marca;
+  this.modelo = modelo;
+  this.speed = Math.trunc(speed);
+};
+
+// Definindo Metodos no Car.prototype que poderão ser acessados pelos objetos que estão linkados a ele através da herança.
+Car.prototype.accelerate = function () {
+  if (this.speed >= 220) {
+    console.log(`O ${this.modelo} já atingiu sua velocidade máxima da via!!`);
+    return;
+  }
+
+  this.speed += 10;
+  console.log(`${this.modelo} is going at ${this.speed}km/hr`);
+};
+
+Car.prototype.break = function () {
+  if (this.speed <= 0) return;
+  this.speed -= 10;
+  console.log(`${this.modelo} is going at ${this.speed}km/hr`);
+};
+
+const car1 = new Car('Hyundai', 'HB20', 120); // vel em km/hr
+const car2 = new Car('Fiat', 'Palio', 95);
+
+// Logging Car objects
+console.log('Car1: ', car1);
+console.log('Car2: ', car2);
+
+// Car 1 :
+car1.accelerate();
+car1.accelerate();
+car1.break();
+car1.break();
+
+// Car 2 :
+car2.break();
+car2.break();
+
+// ====================================================
+
+// ES6 Classes
