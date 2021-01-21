@@ -243,4 +243,36 @@ car2.break();
 
 // ====================================================
 
-// ES6 Classes
+// ES6 Classes = Construtor(), com uma melhor e mais moderna syntaxe - Não funciona de maneira semelhante as classes tradicionais de linguagens como Java.
+
+// class -> Quando um novo objeto é declarado class chama seu metodo constructor() que cria um novo objeto, apontando o this para o objeto criado, cria a propriedade __proto__: PersonCl.prototype, retorna novo objeto
+
+// class expression
+const PersonCl = class {};
+// class declaration
+class Person {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  //   Definindo Metodos do Prototype - Ex Person.prototype.calcAge()
+  calcAge() {
+    const now = new Date();
+    console.log(now.getFullYear() - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hello, ${this.firstName}!!`);
+  }
+}
+
+const flavia = new Person('Flávia', 1968);
+console.log(flavia);
+flavia.calcAge();
+flavia.greet();
+console.log(flavia.__proto__ === Person.prototype);
+
+// 1. Classes are not hoisted: Não podemos utiliza-las antes de declararmos
+// 2. Class are first-class citizes: Podemos passa-las como parâmetros de funções ou retorna-las em funções
+// 3. Classes are executed in strict mode
