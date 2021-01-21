@@ -424,3 +424,51 @@ ford.speedUS = 60;
 console.log(ford);
 
 // Herança entre classes
+
+// Constructor ();
+
+const PersonConstructor = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+// Add methods from PersonConstructor.prototype that are gonna be inherit by the instances
+
+PersonConstructor.prototype.calcAge = function () {
+  const now = new Date();
+  console.log(now.getFullYear() - this.birthYear);
+};
+
+const StudentConstructor = function (firstName, birthYear, course) {
+  PersonConstructor.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+// Setando o prototype do constructor manualmente, usando Object.create(). Devemos fazer isso antes de incluirmos novos metodos ao prototype do constructor - Linking prototype
+
+StudentConstructor.prototype = Object.create(PersonConstructor.prototype);
+
+StudentConstructor.prototype.intro = function () {
+  console.log(`Hello, my name is ${this.firstName} and I study ${this.course}`);
+};
+
+const studentH = new StudentConstructor('Henrique', 1999, 'Engineering');
+const cazzo = new StudentConstructor('Lucca', 2000, 'Computer Science');
+// Prototype Chain
+// StudentH__proto__ contém as propriedades e metodos do StudentConstructor.prototype  (Inherit Prototype 1)
+console.log(studentH.__proto__);
+
+// StudentConstructor é um objeto que esta linkado a propriedade Object.prototype (ou seja StudentConstructor__proto__ = Object.prototype), fazendo com que o mesmo herde todos metodos e propriedades de Object.prototype.
+// Dessa forma para fazer o constructor herdar as propriedades do constructor Person devemos linkar o prototype do Stundent Construtor a propriedade prototype de Person, criando assim uma "constructor" Inherit
+// StudentConstructor.prototype.__proto__ = PersonConstructor.prototype;
+// or setar prototype do constructor usando Object.create()
+
+console.log(studentH);
+cazzo.intro();
+studentH.calcAge();
+cazzo.calcAge();
+
+// OBS: Quando usamos Object.create() mudamos o constructor do Student.prototype para o Person, para corrigirmos isso:
+console.dir(StudentConstructor.prototype.constructor);
+StudentConstructor.prototype.constructor = StudentConstructor;
+console.dir(StudentConstructor.prototype.constructor);
