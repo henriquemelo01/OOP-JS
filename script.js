@@ -347,3 +347,80 @@ console.dir(eduardo);
 
 // Static Method definidido no constructor Person, muito utilizado para criar helper methods
 Person.helloWorld();
+
+// Object.create() - Usando o metodo do Constructor Object podemos settar o prototype de um objeto a partir de um objeto que servira de prototype - Metodo menos utilizado para criarmos objetos, entretanto utilizamos este metodo para estabeler herança entre classes no JS - Setar Prototype Manualmente ***
+
+const AccountProto = {
+  // Simula o metodo construtor das classes, não tem nada haver com o constructor, não usamos new para chamar este metodo
+  init: function (firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+  get balance() {
+    return this.movements.reduce((acc, curValue) => (acc += curValue));
+  },
+};
+
+const acc1 = Object.create(AccountProto); // acc1 = {}, linkado ao AccountProto object
+
+// Definindo propriedades no objeto
+acc1.init('Henrique', 1999);
+acc1.movements = [120, -150, 300, 350, -100];
+console.log(acc1.balance);
+console.log(acc1);
+
+// ================= Coding Challenge #2 =================
+
+/* Your tasks:
+
+1. Re-create Challenge #1, but this time using an ES6 class (call it 'CarCl')
+2. Add a getter called 'speedUS' which returns the current speed in mi/h (divide
+by 1.6)
+3. Add a setter called 'speedUS' which sets the current speed in mi/h (but
+converts it to km/h before storing the value, by multiplying the input by 1.6)
+4. Create a new car and experiment with the 'accelerate' and 'brake'
+methods, and with the getter and setter.
+Test data:
+§ Data car 1: 'Ford' going at 120 km/h
+
+*/
+
+const CarCl = class {
+  constructor(carBrand, speed) {
+    // Definindo propriedade dos objetos
+    this.carBrand = carBrand;
+    this.speed = speed;
+  }
+
+  // Definindo Instance Methods -> Metodo do Carcl.prototype que serão herdados pelos objetos que foram instanciados pela class CarCl
+  get speedUS() {
+    return Math.trunc(this.speed / 1.6); // speed in miles per hour
+  }
+
+  set speedUS(speed) {
+    this.speed = Math.trunc(speed * 1.6); // speed in  m per hour
+  }
+
+  accelerate() {
+    if (this.speed >= 220) return;
+    this.speed += 10;
+    console.log(`${this.carBrand} going at ${this.speed} km/h`);
+  }
+
+  break() {
+    if (this.speed <= 0) return;
+    this.speed -= 5;
+    console.log(`${this.carBrand} going at ${this.speed} km/h`);
+  }
+};
+
+const ford = new CarCl('Ford', 120);
+console.log(ford.speedUS);
+ford.accelerate();
+ford.accelerate();
+ford.break();
+console.log(ford.speedUS); // speed in miles per hour
+ford.speedUS = 60;
+console.log(ford);
+
+// Herança entre classes
