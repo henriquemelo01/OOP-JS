@@ -257,7 +257,8 @@ class Person {
     this.fullName = fullName;
   }
 
-  //   Definindo Metodos do Prototype - Ex Person.prototype.get Age()
+  //   Definindo Metodos do Prototype - Ex Person.prototype.greet, também chamados de Instance Methods
+
   get Age() {
     const now = new Date();
     console.log(now.getFullYear() - this.birthYear);
@@ -281,6 +282,11 @@ class Person {
   // Quando usamos obj.fullName, será chamada a função que cria a propriedade fullName
   get fullName() {
     return this._fullName;
+  }
+
+  // Static Methods - Metodos do constructor, não são herdados
+  static helloWorld() {
+    console.log('Hello World!!');
   }
 }
 
@@ -317,3 +323,27 @@ account.latest = 200; // call set latest()
 console.log(account.movements);
 
 // Exemplo 2 : Modificando o objeto Person - Validation
+
+// ====================================================
+
+// Static Methods: Existem metodos/propriedades que só podem ser chamados/executadas pelo Objeto que os declarou (Ideia do encapasulamento - metodos privados)
+
+// Este metodo esta linkado ao construtor e não ao seu prototype, assim nenhum metodo pode herda-lo.
+const arrH1 = Array.from(document.querySelectorAll('h1'));
+console.dir(arrH1);
+console.log(arrH1);
+
+// Ex 2
+console.log(Math.trunc(1.548));
+
+// Add static Method
+Person.hey = function () {
+  console.log('Heey there !!');
+};
+
+Person.hey(); // Metodo não é herdado
+// eduardo.hey(); - O metodo hey pertence ao constructor e não ao constructor prototype
+console.dir(eduardo);
+
+// Static Method definidido no constructor Person, muito utilizado para criar helper methods
+Person.helloWorld();
