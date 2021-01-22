@@ -520,7 +520,7 @@ EV.prototype.chargeBattery = function (chargeTo) {
   this.charge = chargeTo;
 };
 
-// Polymorfism - Cria um metodo no Ev.prototype -> Car.prototype, tendo em vista o prototype chain, este metodo irá "sobreescrever" o metodo que esta no prototype do Car.prototype, uma vez que este foi definidido a uma camada acima, ou seja, no class child (Ev.prototype)
+// Polymorfism - Cria um metodo no Ev.prototype -> Car.prototype, tendo em vista o prototype chain, este metodo irá "sobreescrever" o metodo que esta no prototype do Car.prototype, uma vez que este foi definidido a uma camada acima, ou seja, no class child Ev.prototype
 EV.prototype.accelerate = function () {
   this.speed += 20;
   this.charge -= 0.01;
@@ -540,27 +540,8 @@ tesla.break();
 
 console.log(tesla);
 
-// Settar this key world manualment
-
-class AirCompany {
-  // this -> Objeto que chamou o new
-  constructor(airline, iataCode, bookings) {
-    this.airline = airline;
-    this.iataCode = iataCode;
-    this.bookings = [];
-  }
-
-  // Airplane.prototype Methods:
-  book(flightNum, name) {
-    console.log(
-      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
-    );
-
-    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name });
-  }
-}
-
 // =========================================
+
 // Revisão Call
 
 // Revisão New:
@@ -569,17 +550,36 @@ class AirCompany {
 
 // Prototype Chain: {} -> Constructor.prototype -> Object.prototype -> null (Prototype Inheritance)
 
-const tam = new AirCompany('Star Aliance', 727, 60);
-tam.book(237, 'Henrique Moraes');
+// =========================================
 
-const lufthansa = {
-  airline: 'Lufthansa',
-  iataCode: 'LH',
-  bookings: [],
-  book(flightNum, name) {
-    console.log(
-      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
-    );
-    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name });
-  },
-};
+// Inherit between "Classes" - ES6 Classes
+
+class Student {
+  constructor(course, university) {
+    this.course = course;
+    this.university = university;
+  }
+}
+
+// Extends -> link to prototype Student.prototype = Object.create(PersonCl.prototype)
+class StudentCl extends Person {
+  constructor(fullName, birthYear, course, university) {
+    // = PersonCl.call(this,...)
+    super(fullName, birthYear);
+
+    // A declaração de metodos e propriedades do prototype do objeto que irá chamar a class sempre deverá ocorrer depois de chamar o parent do constructor - super()
+    this.course = course;
+    this.university = university;
+  }
+
+  introduce() {
+    console.log(`Hi, my name is ${this.fullName} and I study ${this.course}`);
+  }
+}
+
+const martha = new StudentCl('Martha Jones', 2002, 'Computer Science', 'PUC');
+martha.introduce();
+martha.Age;
+console.log(martha);
+
+// OBS: Se não precisarmos incluir nenhuma nova propriedade/metodo só precisamos escrever: ChildClass extends ParentClass {}, uma vez que extendes linka o prototype da ChildClass ao  ParentClass.prototype
