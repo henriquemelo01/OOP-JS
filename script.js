@@ -472,3 +472,114 @@ cazzo.calcAge();
 console.dir(StudentConstructor.prototype.constructor);
 StudentConstructor.prototype.constructor = StudentConstructor;
 console.dir(StudentConstructor.prototype.constructor);
+
+// ================= Coding Challenge #3 =================
+
+/* Your Task:
+
+    1. Use a constructor function to implement an Electric Car (called 'EV') as a child
+    "class" of 'Car'. Besides a make and current speed, the 'EV' also has the
+    current battery charge in % ('charge' property)
+    2. Implement a 'chargeBattery' method which takes an argument
+    'chargeTo' and sets the battery charge to 'chargeTo'
+    3. Implement an 'accelerate' method that will increase the car's speed by 20,
+    and decrease the charge by 1%. Then log a message like this: 'Tesla going at 140
+    km/h, with a charge of 22%'
+    4. Create an electric car object and experiment with calling 'accelerate',
+    'brake' and 'chargeBattery' (charge to 90%). Notice what happens when
+    you 'accelerate'! Hint: Review the definiton of polymorphism
+
+*/
+
+// Constructor
+
+function EV(carBrand, model, speed, charge) {
+  this.charge = charge;
+
+  // Se apenas chamarmos o Constructor Car ele se comportaria como uma regular function, dessa forma o this iria apontar para undefined, assim usando o metodo call, setamos o this manualmente para o objeto que irá chamar o constructor EV (this)
+
+  // this -> Objeto que chama o Constructor
+  Car.call(this, carBrand, model, speed);
+  /*
+  this.marca = marca;
+  this.modelo = modelo;
+  this.speed = Math.trunc(speed); 
+*/
+}
+
+// Prototype Chain: ev__proto__ -> EV.prototype (Simples Objeto) -> Object.prototype -> null
+
+// Para as instancias do constructor EV herdarem os metodos do constructor Car, devemos linkar o prototype do EV com o prototype do Car.prototype
+
+// Link Prototype
+EV.prototype = Object.create(Car.prototype);
+EV.prototype.constructor = EV;
+
+// Add New Methods to the prototype
+EV.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+};
+
+// Polymorfism - Cria um metodo no Ev.prototype -> Car.prototype, tendo em vista o prototype chain, este metodo irá "sobreescrever" o metodo que esta no prototype do Car.prototype, uma vez que este foi definidido a uma camada acima, ou seja, no class child (Ev.prototype)
+EV.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge -= 0.01;
+  console.log(`Tesla going at ${this.speed}
+  km/h, with a charge of ${this.charge * 100}%`);
+};
+
+const tesla = new EV('Tesla', 'Model-X', 120, 0.23);
+
+// Testing Data
+tesla.chargeBattery(0.9);
+tesla.accelerate();
+tesla.accelerate();
+tesla.accelerate();
+tesla.break();
+tesla.break();
+
+console.log(tesla);
+
+// Settar this key world manualment
+
+class AirCompany {
+  // this -> Objeto que chamou o new
+  constructor(airline, iataCode, bookings) {
+    this.airline = airline;
+    this.iataCode = iataCode;
+    this.bookings = [];
+  }
+
+  // Airplane.prototype Methods:
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
+    );
+
+    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name });
+  }
+}
+
+// =========================================
+// Revisão Call
+
+// Revisão New:
+
+// 1. Cria {}, 2. Chama função forçando o this apontar para {} , 3. Redefinir o prototype do {} - {}.__proto__ = Class/Constructor.prototype, 4. Retorna o Objeto
+
+// Prototype Chain: {} -> Constructor.prototype -> Object.prototype -> null (Prototype Inheritance)
+
+const tam = new AirCompany('Star Aliance', 727, 60);
+tam.book(237, 'Henrique Moraes');
+
+const lufthansa = {
+  airline: 'Lufthansa',
+  iataCode: 'LH',
+  bookings: [],
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
+    );
+    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name });
+  },
+};
