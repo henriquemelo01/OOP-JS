@@ -583,3 +583,29 @@ martha.Age;
 console.log(martha);
 
 // OBS: Se não precisarmos incluir nenhuma nova propriedade/metodo só precisamos escrever: ChildClass extends ParentClass {}, uma vez que extendes linka o prototype da ChildClass ao  ParentClass.prototype
+
+// Inherit between "Classes" - Object.create()
+const PersonProto = {
+  calcAge() {
+    const now = new Date();
+    console.log(now.getFullYear() - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const StudentProto = Object.create(PersonProto);
+
+// Polymorfism : Rewriting init method
+StudentProto.init = function (firstName, birthYear, course) {
+  PersonProto.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+const jay = Object.create(StudentProto);
+jay.init('Jay', 2001, 'Engineering');
+jay.calcAge();
+console.log(jay);
