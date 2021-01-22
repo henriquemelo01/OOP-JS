@@ -636,10 +636,12 @@ class AccountBank {
 
   deposit(val) {
     this.#movements.push(val);
+    return this;
   }
 
   withdraw(val) {
     this.deposit(-val);
+    return this;
   }
 
   _approveLoan(val) {
@@ -652,7 +654,13 @@ class AccountBank {
     if (this._approveLoan(val)) {
       this.deposit(val);
       console.log('Loan approved!');
+      return this;
     }
+  }
+
+  // Nos possibilita acessar dados de uma propriedade privada
+  getMovements() {
+    return this.#movements;
   }
 
   get balance() {
@@ -689,3 +697,64 @@ console.log(acc2);
 // Private fields
 // Public methods
 // Private Methods
+
+// Chaining: Para ser possivel fazermos isto é necessario fazer os metodos retornar o objeto
+acc2.deposit(250).deposit(300).withdraw(50).requestLoan(100);
+console.log(acc2.getMovements());
+console.log(acc2.balance);
+
+// ================= Coding Challenge #4 =================
+
+/* Your tasks
+
+1. Re-create Challenge #3, but this time using ES6 classes: create an 'EVCl'
+child class of the 'CarCl' class
+2. Make the 'charge' property private
+3. Implement the ability to chain the 'accelerate' and 'chargeBattery'
+methods of this class, and also update the 'brake' method in the 'CarCl'
+class. Then experiment with chaining!
+Test data:
+§ Data car 1: 'Rivian' going at 120 km/h, with a charge of 23%
+
+*/
+
+// Equivalente extends EVCl.prototype = Object.create(CarCl.prototype)
+class EVCl extends CarCl {
+  // Private propertie: Só navegadores novos suportam (feature no 3 estágio)
+  #charge;
+
+  constructor(carBrand, speed, charge) {
+    // Equivalente: CarCl.call(this,carBrand,speed) - .call Chama a função e seta valor do this
+    super(carBrand, speed);
+
+    // Redefinindo a classe privada #charge
+    this.#charge = charge;
+  }
+
+  // Public Methods (Instance Methods / Public Interface Method - EVCl.prototype Methods)
+
+  accelerate() {
+    this.speed += 20;
+    this.charge -= 1;
+    console.log(`Tesla going at ${this.speed}
+    km/h, with a charge of ${this.charge}%`);
+    return this;
+  }
+
+  break() {
+    if (this.speed <= 0) return;
+    this.speed -= 5;
+    console.log(`${this.carBrand} going at ${this.speed} km/h`);
+    return this;
+  }
+
+  chargeBattery(charge) {
+    this.charge = charge;
+    return this;
+  }
+}
+
+const taycan = new EVCl('Porche', 120, 23);
+console.log(taycan);
+taycan.chargeBattery(85).accelerate().accelerate().accelerate().break().break();
+console.log(taycan.speedUS);
