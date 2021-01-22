@@ -609,3 +609,83 @@ const jay = Object.create(StudentProto);
 jay.init('Jay', 2001, 'Engineering');
 jay.calcAge();
 console.log(jay);
+
+// ===========================
+
+class AccountBank {
+  // Public fields:
+  locale = navigator.language;
+
+  // Private fields - Somente os navegatores atuais suportam essa feature (Disponivel nas intancias não no prototype)
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+
+    // Redefinindo pin privado
+    this.#pin = pin;
+    // this._movements = [];
+    // this.local = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}!!`);
+  }
+
+  // Public Interface of AccountBank objects (API) - Public Methods
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  _approveLoan(val) {
+    return true;
+  }
+
+  // In an API the external code can just acess this method! So we need to encapsulate approve Loan Method
+
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log('Loan approved!');
+    }
+  }
+
+  get balance() {
+    return this.#movements.reduce((acc, mov) => (acc += mov), 0);
+  }
+
+  // Static Method: São metodos que só estão disponíveis na classe (Metodo do construtor)
+  static helper() {
+    console.log('Help');
+  }
+
+  // Private Methods - Ainda não esta disponível em nenhum navegador
+  // #approveLoan(val) {
+  //   return true;
+  // }
+}
+
+const acc2 = new AccountBank('Henrique', 'BRL', 1234);
+acc2.deposit(150);
+acc2.deposit(300);
+acc2.withdraw(55);
+acc2.requestLoan(100);
+console.log(acc2.balance);
+console.log(acc2);
+
+// Encapsulation: Privace data (security), Prevent Bugs - (EX: Impedir que o usuario modifique uma propriedade que esta presente em diversos metodos da API)
+
+// Fake encapsulation : Declaramos as propriedades e metodos que deverão ser privados com _propName  / _methodName -> Padrão utilizado por desenvolvedores JS
+
+// Private class Fields and Methods: This feature has not been implemented yet, however, it is in stage 3 and is going to be implemented soon.
+
+// Filds -> Properties that will be all instances
+// Publlic fildes
+// Private fields
+// Public methods
+// Private Methods
